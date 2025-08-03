@@ -42,6 +42,7 @@ export const verifyToken = async (
 
     return null;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Token verification failed:', error);
     return null;
   }

@@ -13,128 +13,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Phase 1 Models: User, Wishlist, Review only
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   nickname  String
+  password  String   // bcrypt hash
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  // Relations
-  reviews   Review[]
+  // Relations (Phase 1 only)
   wishlists Wishlist[]
-  followers Follow[] @relation("UserFollowers")
-  following Follow[] @relation("UserFollowing")
-  comments  Comment[]
+  reviews   Review[]
 
   @@map("users")
 }
 
-model Restaurant {
-  id          String   @id @default(cuid())
-  name        String
-  address     String?
-  category    String?
-  priceRange  String?
-  latitude    Float?
-  longitude   Float?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  reviews   Review[]
-  wishlists Wishlist[]
-
-  @@map("restaurants")
-}
-
-model Review {
-  id           String   @id @default(cuid())
-  content      String
-  willRevisit  Boolean
-  images       String[] // Array of image URLs
-  tip          String?
-  visitDate    DateTime?
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  // Foreign keys
-  userId       String   @map("user_id")
-  restaurantId String   @map("restaurant_id")
-
-  // Relations
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  menuReviews  MenuReview[]
-  comments     Comment[]
-
-  @@map("reviews")
-}
-
-model MenuReview {
-  id          String  @id @default(cuid())
-  menuName    String
-  description String?
-  rating      Int     // 1-5 scale
-  price       Int?    // in cents
-  
-  // Foreign keys
-  reviewId    String  @map("review_id")
-  
-  // Relations
-  review      Review  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-
-  @@map("menu_reviews")
-}
-
 model Wishlist {
-  id           String   @id @default(cuid())
-  priority     String   @default("medium") // "high", "medium", "low"
-  tags         String[] // ["date", "family", "business", etc.]
-  notes        String?
-  budgetMin    Int?     // in cents
-  budgetMax    Int?     // in cents
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  // Foreign keys
-  userId       String   @map("user_id")
-  restaurantId String   @map("restaurant_id")
+  id             String   @id @default(cuid())
+  restaurantName String   @map("restaurant_name")
+  address        String?
+  memo           String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, restaurantId])
   @@map("wishlists")
 }
 
-model Follow {
-  followerId  String @map("follower_id")
-  followingId String @map("following_id")
-  createdAt   DateTime @default(now()) @map("created_at")
+model Review {
+  id             String   @id @default(cuid())
+  restaurantName String   @map("restaurant_name")
+  address        String?
+  content        String
+  willRevisit    Boolean  @map("will_revisit")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   // Relations
-  follower    User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([followerId, followingId])
-  @@map("follows")
-}
-
-model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Foreign keys
-  userId    String   @map("user_id")
-  reviewId  String   @map("review_id")
-
-  // Relations
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-
-  @@map("comments")
+  @@map("reviews")
 }
