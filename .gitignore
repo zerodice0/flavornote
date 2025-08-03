@@ -1,7 +1,10 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# FlavorNote .gitignore
+# 맛집 리뷰 플랫폼 - Git 버전 관리에서 제외할 파일들
 
-# dependencies
-/node_modules
+# ===== 포함되면 안 되는 내용 =====
+
+# 1. 의존성 모듈 (Dependencies)
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -9,33 +12,170 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# 2. 환경 변수 및 비밀 정보 (Sensitive Data)
 .env*
+!.env.example
+*.key
+*.pem
+*.p12
+*.crt
+config/secrets.json
+/ssl/
+/certificates/
 
-# vercel
-.vercel
-
-# typescript
+# 3. 빌드 산출물 (Build Outputs)
+/.next/
+/out/
+/build/
+/dist/
 *.tsbuildinfo
-next-env.d.ts
+
+# 4. 캐시 및 임시 파일 (Cache & Temporary Files)
+.cache/
+.temp/
+.tmp/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# 5. 테스트 관련 (Testing)
+/coverage/
+/nyc_output/
+*.lcov
+.jest-cache/
+
+# 6. 데이터베이스 관련 (Database)
+# SQLite 개발 DB (실제 PostgreSQL은 외부 서버)
+*.db
+*.sqlite
+*.sqlite3
+/prisma/migrations/dev.db*
+/prisma/dev.db*
+# 민감한 마이그레이션 스크립트 (프로덕션 전용)
+/prisma/migrations/production/
+
+# 7. 업로드된 파일들 (User Uploads)
+/uploads/
+/public/uploads/
+/storage/
+# 사용자가 업로드한 식당 이미지들
+/public/images/restaurants/user-*
+/public/images/reviews/user-*
+
+# 8. 로그 파일 (Logs)
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+/var/log/
+application.log*
+error.log*
+access.log*
+
+# 9. IDE 및 에디터 설정 (개인별 설정)
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# 10. OS 생성 파일들 (OS Generated)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 11. Docker 관련
+.dockerignore
+docker-compose.override.yml
+/docker-data/
+/postgres-data/
+
+# 12. 배포 관련 (Deployment)
+.vercel
+.netlify/
+/deployment/
+pm2.config.js
+
+# 13. 성능 및 분석 도구 (Performance & Analytics)
+.lighthouse/
+bundle-analyzer/
+.analytics/
+
+# 14. 프로젝트 관련 (Project-specific)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.claude
+.husky
+.swc
+
+# ===== 포함되어야 하는 내용 =====
+
+# 1. 소스 코드 (Source Code)
+# ✅ src/ 디렉토리의 모든 TypeScript/React 파일들
+# ✅ components/, lib/, hooks/, types/ 등
+
+# 2. 설정 파일들 (Configuration Files)
+# ✅ package.json, package-lock.json
+# ✅ tsconfig.json, next.config.ts
+# ✅ eslint.config.json, .prettierrc
+# ✅ tailwind.config.ts, postcss.config.mjs
+# ✅ jest.config.js, jest.setup.js
+
+# 3. 데이터베이스 스키마 (Database Schema)
+# ✅ prisma/schema.prisma
+# ✅ prisma/migrations/ (개발용 마이그레이션)
+# ✅ prisma/seed.ts (시드 데이터)
+
+# 4. 공용 자산 (Public Assets)
+# ✅ public/ 디렉토리의 기본 이미지들
+# ✅ 아이콘, 로고, 기본 이미지들
+# ✅ favicon.ico
+
+# 5. 문서화 (Documentation)
+# ✅ README.md, CLAUDE.md
+# ✅ docs/ 디렉토리
+# ✅ 프로젝트 명세서들
+
+# 6. Docker 설정 (Docker Configuration)
+# ✅ Dockerfile, docker-compose.yml
+# ✅ docker/ 디렉토리의 설정 파일들
+
+# 7. 스크립트 (Scripts)
+# ✅ scripts/ 디렉토리
+# ✅ 배포 스크립트, 유틸리티 스크립트들
+
+# 8. 테스트 파일 (Test Files)
+# ✅ __tests__/ 디렉토리
+# ✅ *.test.ts, *.spec.ts 파일들
+
+# 9. Git 설정 (Git Configuration)
+# ✅ .gitignore
+# ✅ .husky/ (Git hooks)
+
+# 10. 환경 설정 템플릿 (Environment Templates)
+# ✅ .env.example (환경 변수 템플릿)
+
+# 특별 고려사항:
+# - 사용자 업로드 이미지는 제외하되, 기본 자산은 포함
+# - 개발용 데이터베이스는 제외하되, 스키마와 마이그레이션은 포함
+# - 개인별 IDE 설정은 제외하되, 프로젝트 공통 설정은 포함
+# - 민감한 정보는 모두 제외하되, 템플릿 파일은 포함

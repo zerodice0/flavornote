@@ -1,0 +1,28 @@
+# FlavorNote 로컬 개발용 .gitignore 예시
+# 개발자가 로컬에서 추가로 제외하고 싶은 파일들
+
+# 개발용 테스트 파일들
+test-data/
+mock-data/
+playground/
+scratch/
+
+# 개발용 스크립트
+dev-scripts/
+my-scripts/
+
+# 개발용 문서
+notes.md
+todo.md
+ideas.txt
+
+# 개발용 이미지 테스트
+test-images/
+sample-uploads/
+
+# 개발용 데이터베이스 백업
+db-backup/
+*.sql.backup
+
+# 개인 설정
+.local-config.json
